@@ -1,6 +1,6 @@
 # DeepGuard: Deepfake Face Image Detector
 
-A Jupyter notebook that trains an **EfficientNet-B0**–based binary classifier to distinguish real human face photographs from AI-generated/deepfake faces, with **explainable forensic analysis** for each prediction.
+A Jupyter notebook that trains an **EfficientNet-B0** based binary classifier to distinguish real human face photographs from AI-generated/deepfake faces, with **explainable forensic analysis** for each prediction.
 
 ## Features
 
@@ -10,59 +10,49 @@ A Jupyter notebook that trains an **EfficientNet-B0**–based binary classifier 
 - **Fused detection**: combines CNN predictions with handcrafted forensic cues (noise uniformity, texture complexity, edge gradients, symmetry)
 - Supports **CUDA**, **MPS** (Apple Silicon), and **CPU**
 
-## Output
+## Example Output
 
-For each uploaded image, the notebook provides:
+### Full Forensic Analysis
 
-| Component | Description |
-|-----------|-------------|
-| **Prediction** | Real vs AI-generated with confidence |
-| **Grad-CAM** | Model attention heatmap on the face |
-| **Frequency spectrum** | FFT magnitude visualization |
-| **Detection scores** | CNN model and fused verdict |
-| **Forensic report** | Evidence such as noise uniformity, edge gradient uniformity, texture detail |
+![Forensic analysis output](notebook_outputs/prediction_output_main_case.png)
 
-### Example
+### Grad-CAM (Model Attention)
 
-Uploading an AI-generated image yields a verdict like:
+![Grad-CAM heatmap](notebook_outputs/case_gradcam.png)
 
-- **VERDICT:** AI-GENERATED / DEEPFAKE  
-- **Combined confidence:** 67% | CNN: 8% fake | Forensic: 0.55  
-- **Evidence:**  
-  1. Noise is very uniform across the image — real cameras produce spatially varying sensor noise  
-  2. Unusually uniform edge gradients (CV: 0.95, real avg ~1.55) — real faces have varied edge strengths across eyes, nose, jawline  
+### Frequency Spectrum (FFT)
+
+![Frequency spectrum](notebook_outputs/case_fft_spectrum.png)
+
+### Detection Scores
+
+![Detection scores](notebook_outputs/case_detection_scores.png)
+
+### Input Image & Forensic Report
+
+![Predicted face](notebook_outputs/case_predicted_face.png)
+![Forensic report text](notebook_outputs/case_forensic_report_text.png)
+
+In this example, the model classifies an AI-generated image as **FAKE** (66.5% fused verdict). The forensic analysis explains why:
+- Noise is very uniform across the image — characteristic of AI-generated content
+- Edge gradients are unusually uniform — real faces show more variation across eyes, nose, jawline
+
+## Training Outputs
+
+![Training loss and accuracy](notebook_outputs/training_loss_accuracy.png)
+![Validation AUC, F1, and learning rate](notebook_outputs/val_auc_f1_lr_schedule.png)
+![ROC curve and confusion matrix](notebook_outputs/roc_curve_confusion_matrix.png)
+![Precision-recall curve](notebook_outputs/precision_recall_curve.png)
+![Sample dataset images](notebook_outputs/sample_images.png)
+![Sample predictions](notebook_outputs/sample_predictions.png)
 
 ## Getting Started
 
 ### Prerequisites
 
 - Python 3.10+
-- PyTorch, torchvision
-- timm, scikit-learn, matplotlib, seaborn, Pillow, ipywidgets, opencv-python
+- PyTorch, torchvision, timm, scikit-learn, matplotlib, seaborn, Pillow, ipywidgets, opencv-python
 
 ### Setup
 
-```bash
 pip install torch torchvision timm scikit-learn seaborn matplotlib pillow ipywidgets opencv-python
-```
-
-### Dataset
-
-The notebook downloads the DF40 deepfake face dataset (~588 MB) from HuggingFace on first run. It contains 3,212 images (1,606 real + 1,606 fake) from 40 deepfake generation methods.
-
-### Run
-
-1. Open `DeepGuard_Deepfake_Detector.ipynb` in Jupyter.
-2. Run all cells to train the model (~13 min on Apple M2 Pro with MPS).
-3. Use the upload widget at the end to analyze your own face images.
-
-## Files
-
-| File | Description |
-|------|-------------|
-| `DeepGuard_Deepfake_Detector.ipynb` | Main notebook (training + inference) |
-| `notebook_outputs/` | Sample plots from a training run |
-
-## License
-
-MIT
